@@ -12,7 +12,7 @@ Low-level GraphQL client for Go.
 ## Installation
 Make sure you have a working Go environment. To install graphql, simply run:
 
-```
+```shell
 $ go get github.com/machinebox/graphql
 ```
 
@@ -20,6 +20,14 @@ $ go get github.com/machinebox/graphql
 
 ```go
 import "context"
+
+type Items struct {
+    Key  string  `json:"key"`
+}
+
+type ResponseStruct struct {
+    Items []Items   `json:"items"`
+}
 
 // create a client (safe to share across requests)
 client := graphql.NewClient("https://machinebox.io/graphql")
@@ -49,14 +57,18 @@ var respData ResponseStruct
 if err := client.Run(ctx, req, &respData); err != nil {
     log.Fatal(err)
 }
+
+fmt.Println(respData.Items[0].Key)
 ```
+
+The response struct does not need the data field as client.Run expects GraphQL will always return data.
 
 ### File support via multipart form data
 
 By default, the package will send a JSON body. To enable the sending of files, you can opt to
 use multipart form data instead using the `UseMultipartForm` option when you create your `Client`:
 
-```
+```go
 client := graphql.NewClient("https://machinebox.io/graphql", graphql.UseMultipartForm())
 ```
 
