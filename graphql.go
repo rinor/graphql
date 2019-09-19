@@ -57,17 +57,17 @@ type Client struct {
 
 // NewClient makes a new Client capable of making GraphQL requests.
 func NewClient(endpoint string, opts ...ClientOption) *Client {
-	c := &Client{
+	c := Client{
 		endpoint: endpoint,
 		Log:      func(string) {},
 	}
 	for _, optionFunc := range opts {
-		optionFunc(c)
+		optionFunc(&c)
 	}
 	if c.httpClient == nil {
 		c.httpClient = http.DefaultClient
 	}
-	return c
+	return &c
 }
 
 func (c *Client) logf(format string, args ...interface{}) {
@@ -273,11 +273,11 @@ type Request struct {
 
 // NewRequest makes a new Request with the specified string.
 func NewRequest(q string) *Request {
-	req := &Request{
+	req := Request{
 		q:      q,
 		Header: make(map[string][]string),
 	}
-	return req
+	return &req
 }
 
 // Var sets a variable.
